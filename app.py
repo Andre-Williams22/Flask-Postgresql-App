@@ -39,15 +39,16 @@ def index():
 def submit():
     if request.method == 'POST':
         customer = request.form['customer']
+        email = request.form['email']
         dealer = request.form['dealer']
         rating = request.form['rating']
         comments = request.form['comments']
         #print(customer, dealer, rating, comments)
-        if customer == '' or dealer == '':
+        if customer == '' or dealer == '' or email == '':
             return render_template('index.html', message='Please enter required fields!!!')
 
         if db.session.query(Feedback).filter(Feedback.customer == customer).count() == 0: # means customer does not exist
-            data = Feedback(customer, dealer, rating, comments)
+            data = Feedback(customer, email, dealer, rating, comments)
             db.session.add(data)
             db.session.commit() # Adds customer to the database
             send_mail(customer, dealer, rating, comments)
