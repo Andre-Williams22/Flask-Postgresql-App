@@ -18,15 +18,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Feedback(db.Model):
-    def __init__(self, customer, dealer, rating, comments):
+    def __init__(self, customer, email, dealer, rating, comments):
         self.customer = customer
         self.dealer = dealer 
         self.rating = rating
         self.comments = comments
+        self.email = email
 
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True)
     customer = db.Column(db.String(200), unique=True)
+    email = db.Column(db.String(200), unique=True)
     dealer = db.Column(db.String(200))
     rating = db.Column(db.Integer)
     customer = db.Column(db.Text())
