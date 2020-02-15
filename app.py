@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from send_mail import send_mail
+
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
 app = Flask(__name__)
 
 # When we switch to Heroku we'll have a totally different database
@@ -16,22 +20,30 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+# from app import db
+# db.create_all()
+
+migrate = Migrate(app, db)
+manager = Manager(app)
+
+manager.add_command('db', MigrateCommand)
 
 class Feedback(db.Model):
-    def __init__(self, customer, email, dealer, rating, comments):
-        self.customer = customer
-        self.dealer = dealer 
-        self.rating = rating
-        self.comments = comments
-        self.email = email
-
     __tablename__ = 'feedback'
     id = db.Column(db.Integer, primary_key=True)
     customer = db.Column(db.String(200), unique=True)
-    email = db.Column(db.String(200), unique=True)
+    email = db.Column(db.String(200))
     dealer = db.Column(db.String(200))
     rating = db.Column(db.Integer)
     customer = db.Column(db.Text())
+
+    def __init__(self, customer, email, dealer, rating, comments):
+        self.customer = customer
+        self.email = email
+        self.dealer = dealer 
+        self.rating = rating
+        self.comments = comments
+        
 
 @app.route('/')
 def index():
@@ -61,5 +73,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    app.debug=True
-    app.run()
+    manager.run()
