@@ -9,7 +9,7 @@ def send_mail(customer, email, dealer, rating, comments):
     message = f'<h2>New Feedback Submission</h2><ul> <li>Customer: {customer}</li> <li>{email}</li><li>Dealer: {dealer}</li><li>Dealer: {rating}</li><li>Dealer: {comments}</li> </ul>'
 
     sender_email = 'andre.williams@students.makeschool.com'
-    receiver_email = email
+    receiver_email = f'{email}'
     msg = MIMEText(message, 'html')
     msg['Subject'] = 'Lexuas Feedback'
     msg['From'] = sender_email
