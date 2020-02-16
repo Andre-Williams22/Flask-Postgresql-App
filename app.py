@@ -2,8 +2,6 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from send_mail import send_mail
 
-from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
 
 app = Flask(__name__)
 
@@ -23,10 +21,6 @@ db = SQLAlchemy(app)
 # from app import db
 # db.create_all()
 
-migrate = Migrate(app, db)
-manager = Manager(app)
-
-manager.add_command('db', MigrateCommand)
 
 class Feedback(db.Model):
     __tablename__ = 'feedback'
@@ -55,7 +49,7 @@ def submit():
         rating = request.form['rating']
         comments = request.form['comments']
         #print(customer, dealer, rating, comments)
-        if customer == '' or dealer == '' or email == '':
+        if customer == '' or dealer == '':
             return render_template('index.html', message='Please enter required fields!!!')
 
         if db.session.query(Feedback).filter(Feedback.customer == customer).count() == 0: # means customer does not exist
@@ -70,4 +64,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    manager.run()
+    app.run()
